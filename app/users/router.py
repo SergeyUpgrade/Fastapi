@@ -2,10 +2,10 @@ from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy.testing.pickleable import User
 from starlette.responses import Response
 
-from users.auth import get_password_hash, authenticate_user, create_access_token
-from users.dao import UsersDAO
-from users.dependencies import get_current_user
-from users.schemas import SUserRegister, SUserAuth
+from app.users.auth import get_password_hash, authenticate_user, create_access_token
+from app.users.dao import UsersDAO
+from app.users.dependencies import get_current_user
+from app.users.schemas import SUserRegister, SUserAuth
 
 router = APIRouter(prefix='/auth', tags=['Auth'])
 

@@ -5,7 +5,7 @@ from datetime import datetime, timedelta, timezone
 from pydantic import EmailStr
 
 from app.config import get_auth_data
-from users.dao import UsersDAO
+from app.users.dao import UsersDAO
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

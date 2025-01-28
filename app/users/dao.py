@@ -2,7 +2,7 @@ from sqlalchemy import select
 
 from app.database import async_session_maker
 from dao.base import BaseDAO
-from users.models import Users
+from app.users.models import Users
 
 
 class UsersDAO(BaseDAO):
