@@ -1,5 +1,9 @@
+from typing import Union
+
 from pydantic import BaseModel, EmailStr, Field, field_validator
 import re
+
+from pydantic_core.core_schema import ValidationInfo
 
 
 class SUserRegister(BaseModel):
@@ -29,14 +33,28 @@ class SUserRegister(BaseModel):
             raise ValueError('Пароль должен содержать только латинские буквы, цифры и специальные символы ($%&!:)')
         return v
 
-        @field_validator("re_password")
-        @classmethod
-        def passwords_match(cls, values: str, info: ValidationInfo) -> str:
-            if "password" in info.data and values != info.data["password"]:
-                raise ValueError("Пароли не совпадают")
-            return values
+    @field_validator("re_password")
+    @classmethod
+    def passwords_match(cls, values: str, info: ValidationInfo) -> str:
+        print('Hello')
+        if "re_password" in info.data and values != info.data["password"]:
+            raise ValueError("Пароли не совпадают")
+        return values
 
 
 class SUserAuth(BaseModel):
     email: EmailStr = Field(..., description="Электронная почта")
     password: str = Field(..., min_length=5, max_length=50, description="Пароль, от 5 до 50 знаков")
+
+#class SUserAuth(BaseModel):
+#    login_credential: Union[EmailStr, str] = Field(..., description="Электронная почта или телефон пользователя")
+#    password: str
+
+    #@field_validator("login_credential")
+    #@classmethod
+    #def validate_login_credential(cls, v):
+    #    if "@" in v:
+    #        assert len(v.split("@")) == 2, "Invalid email format."
+    #    elif len(v) != 12:
+    #        raise ValueError("Phone number must be 11 digits long.")
+    #    return v

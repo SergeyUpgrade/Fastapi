@@ -25,7 +25,7 @@ class Base(AsyncAttrs, DeclarativeBase):
 
     @declared_attr.directive
     def __tablename__(cls) -> str:
-        return f"{cls.__name__.lower()}s"
+        return f"{cls.__name__.lower()}"
 
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]

@@ -11,7 +11,7 @@ class Users(Base):
     name: Mapped[str]
     email: Mapped[str_uniq]
     password: Mapped[str]
-
+    re_password: Mapped[str]
 
     is_user: Mapped[bool] = mapped_column(default=True, server_default=text('true'), nullable=False)
     is_admin: Mapped[bool] = mapped_column(default=False, server_default=text('false'), nullable=False)
