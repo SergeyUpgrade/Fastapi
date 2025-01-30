@@ -41,14 +41,6 @@ class SUserRegister(BaseModel):
         return values
 
 
-#class EmailUserAuth(BaseModel):
-#    email: EmailStr = Field(..., description="Электронная почта")
-#    password: str = Field(..., min_length=5, max_length=50, description="Пароль, от 5 до 50 знаков")
-#
-#class PhoneUserAuth(BaseModel):
-#    phone: str = Field(..., description="Электронная почта или телефон пользователя")
-#    password: str
-
 class CredentialUserAuth(BaseModel):
     user_credential: str = Field(..., description="Электронная почта или телефон пользователя")
     password: str

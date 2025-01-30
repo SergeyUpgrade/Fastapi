@@ -3,7 +3,7 @@
 Шаги по запуску:
 
 1.pip install -r req.txt
-2. Создаем папку с миграциями alembic init migrations
+2. Создаем папку с миграциями alembic init alembic
 3. Создаем миграцию таблиц lembic revision --autogenerate -m "comment"
 4. Применяем миграцию alembic upgrade head 
 5. оборачиваем все в докер, значения в {} заменить на свои docker run -d --name {container-name} -p 50ХХ:5432 -e POSTGRES_DB={db-name} -e POSTGRES_USER={username} -e POSTGRES_PASSWORD={password} postgres:15.2 

@@ -3,8 +3,10 @@ from sqlalchemy.orm import relationship, Mapped, mapped_column
 from app.database import Base, str_uniq, int_pk, str_null_true
 from datetime import date
 
+from app.product.models import Cart
 
-# создаем модель таблицы студентов
+
+
 class Users(Base):
     id: Mapped[int_pk]
     phone_number: Mapped[str_uniq]

@@ -1,4 +1,4 @@
-from http.client import HTTPException
+#from http.client import HTTPException
 #
 #from fastapi import Depends, APIRouter
 #from sqlalchemy.ext.asyncio import AsyncSession
@@ -6,8 +6,16 @@ from http.client import HTTPException
 #
 #from app.Product.models import Product
 #
-#router = APIRouter(prefix='/products', tags=['Products'])
+from fastapi import APIRouter, Body
+from . import services
+from .models import Product as ProductModel
+from .schemas import ProductList, Product
+from ..database import async_session_maker
 
+router = APIRouter(prefix='/products', tags=['Products'])
+
+
+#
 #@router.post("/products/", response_model=Product)
 #async def create_product(*, db: AsyncSession = Depends(get_db), product: Product):
 #    db_obj = Product(**product.dict(exclude_unset=True))
@@ -34,3 +42,20 @@ from http.client import HTTPException
 #    db.delete(db_obj)
 #    await db.commit()
 #    return {"message": f"Product with id {id} was deleted."}
+
+@router.get('/', response_model=ProductList)
+async def get_products():
+    async with async_session_maker() as session:
+        return await services.get_products(session)
+
+
+@router.get('/{product_id}', response_model=Product)
+async def get_products(product_id):
+    async with async_session_maker() as session:
+        return await services.get_product(session, product_id=product_id)
+
+
+#@router.post('/create', response_model=ProductModel)
+#async def create_product(product: ProductModel = Body(...)):
+#    async with async_session_maker() as session:
+#        return await services.create_product(session, product)
