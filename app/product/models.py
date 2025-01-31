@@ -15,33 +15,20 @@ class Product(Base):
         return f"{self.__class__.__name__}(id={self.id})"
 
 
-#class Cart(Base):
-#    id: Mapped[int_pk]
-#    user_id: Mapped[int] = mapped_column(
-#        Integer,
-#        ForeignKey("users.id"),
-#    )
-#
-#    @property
-#    def user(self):
-#        from app.users.models import Users
-#        return relationship(Users, back_populates='cart')
-#
-#    products: Mapped[list["Product"]] = relationship(
-#        "Product",
-#        back_populates="cart",
-#        cascade="all, delete",
-#    )
+class Cart(Base):
+    id: Mapped[int_pk]
+    user_id: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("users.id"),
+    )
 
 
-#class CartItem(Base):
-#    id: Mapped[int_pk]
-#    product_id: Mapped[int] = mapped_column(
-#        Integer
-#    )
-#    cart_id: Mapped[int] = mapped_column(
-#        Integer
-#    )
-#    user_id: Mapped[int] = mapped_column(
-#        Integer
-#    )
+
+class CartItem(Base):
+    id: Mapped[int_pk]
+    product_id: Mapped[int] = mapped_column(
+        Integer
+    )
+    cart_id: Mapped[int] = mapped_column(
+        Integer
+    )

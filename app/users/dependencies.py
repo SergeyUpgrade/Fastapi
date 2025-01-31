@@ -12,7 +12,7 @@ def get_token(request: Request):
     return token
 
 
-async def get_current_user(token: str = Depends(get_token)):
+async def get_current_user_id(token: str = Depends(get_token)):
     try:
         auth_data = get_auth_data()
         payload = jwt.decode(token, auth_data['secret_key'], algorithms=[auth_data['algorithm']])
@@ -28,8 +28,9 @@ async def get_current_user(token: str = Depends(get_token)):
     if not user_id:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Не найден ID пользователя')
 
-    user = await UsersDAO.find_one_or_none_by_id(int(user_id))
-    if not user:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User not found')
+    #user = await UsersDAO.find_one_or_none_by_id(int(user_id))
+    #if not user:
+    #    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User not found')
+#
+    return user_id
 
-    return user

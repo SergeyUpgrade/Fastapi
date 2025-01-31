@@ -5,7 +5,7 @@ from starlette.responses import Response
 from app.users.auth import get_password_hash, create_access_token, authenticate_user_email, \
     authenticate_user_phone_number
 from app.users.dao import UsersDAO
-from app.users.dependencies import get_current_user
+from app.users.dependencies import get_current_user_id
 from app.users.schemas import SUserRegister, CredentialUserAuth
 
 router = APIRouter(prefix='/auth', tags=['Auth'])
@@ -49,7 +49,7 @@ async def auth_user(response: Response, user_credential: CredentialUserAuth):
 
 
 @router.get("/me/")
-async def get_me(user_data: User = Depends(get_current_user)):
+async def get_me(user_data: User = Depends(get_current_user_id)):
     return user_data
 
 

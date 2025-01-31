@@ -6,11 +6,14 @@
 #
 #from app.Product.models import Product
 #
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Depends
+from sqlalchemy.testing.pickleable import User
+
 from . import services
 from .models import Product as ProductModel
-from .schemas import ProductList, Product, NewProduct
+from .schemas import ProductList, Product, NewProduct, Cart
 from ..database import async_session_maker, SessionDep
+from ..users.dependencies import get_current_user_id
 
 router = APIRouter(prefix='/products', tags=['Products'])
 
@@ -49,20 +52,35 @@ async def get_products():
         return await services.get_products(session)
 
 
-@router.get('/{product_id}', response_model=Product)
+@router.get('/product/{product_id}', response_model=Product)
 async def get_products(product_id, session: SessionDep):
     return await services.get_product(session, product_id=product_id)
 
 
-@router.post('/create', response_model=Product)
+@router.post('/product/create', response_model=Product)
 async def create_product(product: NewProduct, session: SessionDep):
     return await services.create_product(session, product)
 
 
-@router.delete('/{product_id}')
+@router.delete('/product/{product_id}')
 async def get_products(product_id: int, session: SessionDep):
     return await services.delete_product(session, product_id=product_id)
 
-@router.post('/{product_id}',response_model=Product)
+
+@router.post('/product/{product_id}', response_model=Product)
 async def update_products(product: Product, session: SessionDep):
     return await services.update_product(session, product)
+
+
+@router.get('/cart', response_model=Cart)
+async def get_user_cart(session: SessionDep, user_id: int = Depends(get_current_user_id)):
+    print(user_id)
+    return await services.get_user_cart(int(user_id), session)
+
+@router.post('/cart/add_item')
+async def add_item_to_cart(session: SessionDep, user_id: int, product_id: int):
+    return await services.add_item_to_cart(
+        session=session,
+        user_id=user_id,
+        product_id=product_id
+    )
