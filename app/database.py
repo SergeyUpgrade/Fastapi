@@ -1,17 +1,40 @@
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncAttrs
-from sqlalchemy.orm import DeclarativeBase, declared_attr
+from datetime import datetime
+from typing import Annotated, Type
 
+from fastapi import Depends
+from sqlalchemy import func
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncAttrs, AsyncSession
+from sqlalchemy.orm import DeclarativeBase, declared_attr, Mapped, mapped_column, Session, sessionmaker
 
-DB_HOST = 'localhost'
-DB_PORT = '5433'
-DB_NAME = 'fast_api'
-DB_USER = 'amin'
-DB_PASSWORD = 'my_super_password'
+from app.config import get_db_url
 
-DATABASE_URL = f'postgresql+asyncpg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
+DATABASE_URL = get_db_url()
 
 engine = create_async_engine(DATABASE_URL)
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
+
+from contextlib import asynccontextmanager
+
+
+#@asynccontextmanager
+#async def get_session():
+#    with async_sessionmaker(engine) as session:
+#        yield session
+#        await session.commit()
+async def get_session() -> AsyncSession:
+    async_session = async_sessionmaker(engine, expire_on_commit=False)
+    async with async_session() as session:
+        yield session
+        await session.commit()
+
+SessionDep = Annotated[Session, Depends(get_session)]
+
+# настройка аннотаций
+int_pk = Annotated[int, mapped_column(primary_key=True)]
+created_at = Annotated[datetime, mapped_column(server_default=func.now())]
+updated_at = Annotated[datetime, mapped_column(server_default=func.now(), onupdate=datetime.now)]
+str_uniq = Annotated[str, mapped_column(unique=True, nullable=False)]
+str_null_true = Annotated[str, mapped_column(nullable=True)]
 
 
 class Base(AsyncAttrs, DeclarativeBase):
@@ -19,4 +42,7 @@ class Base(AsyncAttrs, DeclarativeBase):
 
     @declared_attr.directive
     def __tablename__(cls) -> str:
-        return f"{cls.__name__.lower()}s"
+        return f"{cls.__name__.lower()}"
+
+    created_at: Mapped[created_at]
+    updated_at: Mapped[updated_at]
