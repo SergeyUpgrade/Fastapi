@@ -1,16 +1,13 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+
 
 class NewProduct(BaseModel):
-    name: str
-    price: float
+    name: str = Field(..., max_length=50, description="Название товара")
+    price: float = Field(..., description="Цена товара")
 
 
 class Product(NewProduct):
     id: int
-
-    class Config:
-        orm_mode = True
-        from_attributes = True
 
 
 class ProductList(BaseModel):

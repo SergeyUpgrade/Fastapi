@@ -9,8 +9,8 @@
 from fastapi import APIRouter, Body
 from . import services
 from .models import Product as ProductModel
-from .schemas import ProductList, Product
-from ..database import async_session_maker
+from .schemas import ProductList, Product, NewProduct
+from ..database import async_session_maker, SessionDep
 
 router = APIRouter(prefix='/products', tags=['Products'])
 
@@ -50,12 +50,19 @@ async def get_products():
 
 
 @router.get('/{product_id}', response_model=Product)
-async def get_products(product_id):
-    async with async_session_maker() as session:
-        return await services.get_product(session, product_id=product_id)
+async def get_products(product_id, session: SessionDep):
+    return await services.get_product(session, product_id=product_id)
 
 
-#@router.post('/create', response_model=ProductModel)
-#async def create_product(product: ProductModel = Body(...)):
-#    async with async_session_maker() as session:
-#        return await services.create_product(session, product)
+@router.post('/create', response_model=Product)
+async def create_product(product: NewProduct, session: SessionDep):
+    return await services.create_product(session, product)
+
+
+@router.delete('/{product_id}')
+async def get_products(product_id: int, session: SessionDep):
+    return await services.delete_product(session, product_id=product_id)
+
+@router.post('/{product_id}',response_model=Product)
+async def update_products(product: Product, session: SessionDep):
+    return await services.update_product(session, product)

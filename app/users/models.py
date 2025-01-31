@@ -3,9 +3,6 @@ from sqlalchemy.orm import relationship, Mapped, mapped_column
 from app.database import Base, str_uniq, int_pk, str_null_true
 from datetime import date
 
-from app.product.models import Cart
-
-
 
 class Users(Base):
     id: Mapped[int_pk]
@@ -22,4 +19,3 @@ class Users(Base):
 
     def __repr__(self):
         return f"{self.__class__.__name__}(id={self.id})"
-
