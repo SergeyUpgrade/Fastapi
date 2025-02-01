@@ -8,15 +8,13 @@ class NewProduct(BaseModel):
 
 class Product(NewProduct):
     id: int
+    name: str
+    price: float
 
 
 class ProductList(BaseModel):
     items: list[Product]
 
-
 class Cart(BaseModel):
     items: list[Product]
-
-
-class AddProductToCart(BaseModel):
-    product_id: int
+    total_price: float
