@@ -1,12 +1,10 @@
-from typing import Union
-
-from pydantic import BaseModel, EmailStr, Field, field_validator
 import re
 
+from pydantic import BaseModel, Field, field_validator, EmailStr
 from pydantic_core.core_schema import ValidationInfo
 
 
-class SUserRegister(BaseModel):
+class UserRegistration(BaseModel):
     name: str = Field(..., min_length=3, max_length=50, description="Имя, от 3 до 50 символов")
     phone_number: str = Field(..., description="Номер телефона в международном формате, начинающийся с +7 и содержать 10 цифр")
     email: EmailStr = Field(..., description="Электронная почта")
@@ -39,7 +37,6 @@ class SUserRegister(BaseModel):
         if "re_password" in info.data and values != info.data["password"]:
             raise ValueError("Пароли не совпадают")
         return values
-
 
 class CredentialUserAuth(BaseModel):
     user_credential: str = Field(..., description="Электронная почта или телефон пользователя")
