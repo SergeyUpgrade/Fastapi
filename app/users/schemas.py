@@ -31,12 +31,11 @@ class UserRegistration(BaseModel):
             raise ValueError('Пароль должен содержать только латинские буквы, цифры и специальные символы ($%&!:)')
         return v
 
-    @field_validator("re_password")
-    @classmethod
-    def passwords_match(cls, values: str, info: ValidationInfo) -> str:
-        if "re_password" in info.data and values != info.data["password"]:
-            raise ValueError("Пароли не совпадают")
-        return values
+    @field_validator('re_password')
+    def passwords_match(cls, v: str, values: dict) -> str:
+        if 'password' in values.data and v != values.data['password']:
+            raise ValueError('Пароли не совпадают')
+        return v
 
 class CredentialUserAuth(BaseModel):
     user_credential: str = Field(..., description="Электронная почта или телефон пользователя")
